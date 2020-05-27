@@ -37,9 +37,8 @@ int main(int argc, char const *argv[])
         h_print(&h);
     }
 
-    while (h.size)
+    while (h_poll(&h, &i))
     {
-        h_poll(&h, &i);
         printf("poll %2i;\t", i);
         h_print(&h);
     }

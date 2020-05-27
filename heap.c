@@ -72,8 +72,8 @@ int h_offer(struct heap *h, void const *e)
 
             n = (n - 1) / 2;
         }
-
         h->size++;
+
         return 1;
     }
     else
@@ -82,15 +82,15 @@ int h_offer(struct heap *h, void const *e)
 
 int h_peek(struct heap *h, void *w)
 {
-    if (h->data)
+    if (h->size)
         memcpy(w, H(0), h->es);
 
-    return !!h->data;
+    return !!h->size;
 }
 
 int h_poll(struct heap *h, void *w)
 {
-    if (h->data)
+    if (h->size)
     {
         size_t n = 0;
         memcpy(w, H(0), h->es);
@@ -104,7 +104,7 @@ int h_poll(struct heap *h, void *w)
                  *child2 = n * 2 + 2 < h->size ? H(n * 2 + 2) : NULL,
                  *min = child1 && child2
                             ? (h->cmp(child1, child2) < 0 ? child1 : child2)
-                            : child1;
+                            : (child1 ? child1 : child2);
 
             if (min && h->cmp(min, parent) < 0)
                 h_swap(h, min, parent);
@@ -113,7 +113,9 @@ int h_poll(struct heap *h, void *w)
 
             n = n * 2 + (min == child1 ? 1 : 2);
         }
-    }
 
-    return !!h->data;
+        return 1;
+    }
+    else
+        return 0;
 }
