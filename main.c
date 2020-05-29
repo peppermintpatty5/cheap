@@ -1,48 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "heap.h"
 
-#define N 50
-
-static int intcmp(void const *va, void const *vb)
+/**
+ * The built-in strcmp() function compares strings, this function compares
+ * pointers to strings.
+ */
+static int strptrcmp(void const *va, void const *vb)
 {
-    return *(int *)va - *(int *)vb;
+    typedef char const *T; /* make the Java programmers feel at home */
+    T a = *(T *)va, b = *(T *)vb;
+
+    return strcmp(a, b);
 }
 
-static void h_print(struct heap *h)
-{
-    size_t n;
-
-    for (n = 0; n < h->size; n++)
-        printf("%i ", ((int *)h->data)[n]);
-    putchar('\n');
-}
-
+/**
+ * A simple program that demonstrates heap sort.
+ */
 int main(int argc, char const *argv[])
 {
     int i;
-    int a[N];
-    struct heap h = HEAP(int, intcmp);
+    char const *str;
+    struct heap h = HEAP(char const *, strptrcmp);
 
-    srand(time(NULL));
-    for (i = 0; i < N; i++)
-        a[i] = rand() % 100;
-
-    for (i = 0; i < N; i++)
+    if (argc > 1)
     {
-        h_offer(&h, &a[i]);
-        printf("offer %2i;\t", a[i]);
-        h_print(&h);
-    }
+        for (i = 1; i < argc; i++)
+            h_offer(&h, &argv[i]);
 
-    while (h_poll(&h, &i))
-    {
-        printf("poll %2i;\t", i);
-        h_print(&h);
+        while (h_poll(&h, &str))
+            printf("%s ", str);
     }
+    else
+        printf("Run this program with some arguments to see heap sort!");
+    putchar('\n');
 
-    (void)argc, (void)argv; /* suppress -Wextra */
     return EXIT_SUCCESS;
 }

@@ -3,9 +3,13 @@
 
 #include <stddef.h>
 
-#define HEAP(t, f)               \
-    {                            \
-        NULL, f, 0, 0, sizeof(t) \
+/**
+ * Macro for correctly initializing a heap structure given a data type and
+ * comparator function.
+ */
+#define HEAP(type, cmp)               \
+    {                                 \
+        NULL, cmp, 0, 0, sizeof(type) \
     }
 
 /**
@@ -36,19 +40,21 @@ void h_clear(struct heap *h);
 int h_contains(struct heap *h, void const *e);
 
 /**
- * Inserts the specified element into the heap.
+ * Inserts the specified element into the heap. Returns non-zero if the
+ * insertion was successful.
  */
 int h_offer(struct heap *h, void const *e);
 
 /**
  * Retrieves, but does not remove, the head of the heap. The element is copied
- * to the specified writeback address.
+ * to the specified writeback address. Returns non-zero if the heap was not
+ * empty.
  */
 int h_peek(struct heap *h, void *w);
 
 /**
  * Retrieves and removes the head of the heap. The element is copied to the
- * specified writeback address.
+ * specified writeback address. Returns non-zero if the heap was not empty.
  */
 int h_poll(struct heap *h, void *w);
 
