@@ -30,7 +30,7 @@ struct heap
 };
 
 /**
- * Removes all of the elements from the heap.
+ * Removes all of the elements from the heap and frees the data pointer.
  */
 void h_clear(struct heap *h);
 
